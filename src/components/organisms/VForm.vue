@@ -11,25 +11,36 @@
         <option value="DONE">Done</option>
       </select>
       <button type="submit">{{ task && task.name && task.description? "Edit Task" : "Add Task"}}</button>
-    </form>
+      </form>
 </template>
 <script setup lang="ts">
 	import {ref} from 'vue'
 	import type { Task} from '@types/Task'
 		const name = ref('')
 		const description = ref('')
-  		const status = ref('TO DO');
+  	const status = ref('TO DO');
 
-		const emit = defineEmits(['submit'])
+		const emit = defineEmits(['submit','cancelTask'])
 		const props = defineProps<{task?:Task}>()
 
-		if(task && task.name && task.description){
-			name.value = task.value.name
-			description.value = task.value.description
-			status.value = task.value.status
+		if(props.task && props.task.name && props.task.description){
+			name.value = props.task.value.name
+			description.value = props.task.value.description
+			status.value = props.task.value.status
 		}
 
 		function submit(){
-			emit('submit', id, name, description, status)
+			emit('submit', props.task?.id? props.task.id : 0, name.value, description.value, status.value);
+			name.value = ''
+			description.value = ''
+			status.value = 'TO DO'
 		}
 </script>
+<style scoped>
+	form{
+display: flex;
+justify-content: center;
+gap: 20px; 
+margin: 10px;
+}
+</style>

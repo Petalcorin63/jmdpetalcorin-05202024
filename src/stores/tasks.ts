@@ -12,10 +12,22 @@ export const useTasksStore = defineStore('counter', () => {
     }
   }
 
+  const doneTaskList = computed(()=>{
+    return taskList.value.filter(item => item.status === "DONE")
+  })
+
+  const inTaskList = computed(()=>{
+    return taskList.value.filter(item => item.status === "IN PROGRESS")
+  })
+
+  const todoTaskList = computed(()=>{
+    return taskList.value.filter(item => item.status === "TO DO")
+  })
+
   function deleteTask(id:string){
     if(id !== ""){
-    taskList.value = task.value.filter((i) => {
-        return i.id !== task.id
+    taskList.value = taskList.value.filter((i) => {
+        return i.id !== id
       })
     }
   }
@@ -35,13 +47,13 @@ export const useTasksStore = defineStore('counter', () => {
     if(task && 
         task.name && 
         task.description && 
-        taskList.some((i) => { return i.id === task.id})
+        taskList.value.some((i) => { return i.id === task.id})
       ){
-      taskList.value.with(taskList.findIndex((i) => {
+      taskList.value.with(taskList.value.findIndex((i) => {
         return i.id === task.id
       }), task)
     }
   }
 
-  return { taskList, updateTask, addTask, createTask, deleteTask}
+  return { taskList, updateTask, addTask, createTask, deleteTask, inTaskList, todoTaskList, doneTaskList}
 })
